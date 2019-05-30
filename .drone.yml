@@ -9,6 +9,8 @@ steps:
       from_secret: docker-hub-username
     password: 
       from_secret: docker-hub-password
+    build-args:
+      from_secret: build-args
     repo: kramergroup/casm
     tags: 
     - condo-latest
@@ -21,6 +23,8 @@ steps:
       from_secret: docker-hub-username
     password: 
       from_secret: docker-hub-password
+    build-args:
+      from_secret: build-args
     repo: kramergroup/casm
     tags: 
     - latest 

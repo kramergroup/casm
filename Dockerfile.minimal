@@ -8,6 +8,8 @@ FROM ubuntu:latest
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 ENV PATH /opt/conda/bin:$PATH
 
+ARG CASM_NCPU 4
+
 RUN apt-get update --fix-missing && \
     apt-get install -y wget bzip2 ca-certificates curl git && \
     apt-get clean && \
@@ -41,6 +43,23 @@ RUN . /opt/conda/etc/profile.d/conda.sh && \
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
 CMD [ "/bin/bash" ]
 
+# Obtain VASP pseudo-potentials
+# -----------------------------
+# The pseudo-potentials cannot be publicly distributed due to license constrains.
+# This build container obtains them from a private S3 store such as minio
+# using the S3_HOST and access-key and secret arguments
+FROM minio/mc as s3
+
+ARG S3_HOST
+ARG S3_ACCESS_KEY_ID
+ARG S3_SECRET_ACCESS_KEY
+
+RUN mc config host add --insecure minio https://$S3_HOST $S3_ACCESS_KEY_ID $S3_SECRET_ACCESS_KEY
+RUN mc --insecure cp minio/vasp/vasp5_psps.tar.gz /tmp/vasp5_psps.tar.gz
+
+WORKDIR /VASP5_psps
+RUN tar xvzf /tmp/vasp5_psps.tar.gz 
+
 FROM ubuntu 
 
 COPY --from=0 /tmp/casm/.libs/*.so /lib/
@@ -51,8 +70,13 @@ COPY --from=0 /usr/lib/x86_64-linux-gnu/libboost_program* /usr/lib/x86_64-linux-
 COPY --from=0 /usr/lib/x86_64-linux-gnu/libboost_regex* /usr/lib/x86_64-linux-gnu/
 COPY --from=0 /usr/lib/x86_64-linux-gnu/libboost_chrono* /usr/lib/x86_64-linux-gnu/
 COPY --from=0 /usr/lib/x86_64-linux-gnu/libicu* /usr/lib/x86_64-linux-gnu/
+COPY --from=1 /VASP5_psps /VASP5_psps
+
+ENV POTCAR_DIR_PATH /VASP5_psps
 
 VOLUME /data
 WORKDIR /data
+
+
 
 ENTRYPOINT [ "/bin/casm" ]
