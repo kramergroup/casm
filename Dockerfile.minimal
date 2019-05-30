@@ -8,7 +8,7 @@ FROM ubuntu:latest
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 ENV PATH /opt/conda/bin:$PATH
 
-ARG CASM_NCPU 4
+ENV CASM_NCPU 4
 
 RUN apt-get update --fix-missing && \
     apt-get install -y wget bzip2 ca-certificates curl git && \
