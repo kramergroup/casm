@@ -51,3 +51,8 @@ COPY --from=0 /usr/lib/x86_64-linux-gnu/libboost_program* /usr/lib/x86_64-linux-
 COPY --from=0 /usr/lib/x86_64-linux-gnu/libboost_regex* /usr/lib/x86_64-linux-gnu/
 COPY --from=0 /usr/lib/x86_64-linux-gnu/libboost_chrono* /usr/lib/x86_64-linux-gnu/
 COPY --from=0 /usr/lib/x86_64-linux-gnu/libicu* /usr/lib/x86_64-linux-gnu/
+
+VOLUME /data
+WORKDIR /data
+
+ENTRYPOINT [ "/bin/casm" ]
