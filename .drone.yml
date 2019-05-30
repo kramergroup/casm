@@ -2,7 +2,7 @@ kind: pipeline
 name: default
 
 steps:
-- name: docker-build
+- name: docker-condo
   image: banzaicloud/drone-kaniko
   settings:
     username: 
@@ -14,7 +14,7 @@ steps:
     - condo-latest
     - condo-${DRONE_COMMIT_SHA}
     dockerfile: Dockerfile
-- name: docker-build
+- name: docker-minimal
   image: banzaicloud/drone-kaniko
   settings:
     username: 
