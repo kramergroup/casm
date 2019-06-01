@@ -34,6 +34,12 @@ RUN /root/miniconda3/bin/conda install --override-channels --yes \
 
 RUN /root/miniconda3/bin/conda init bash
 
+## Patch the casm code for generating INCARs
+## See issue: 
+COPY patches/casm.io.vasp.incar.py.patch /tmp/casm.io.vasp.incar.py.patch
+RUN apt-get update && apt-get install --no-install-recommends -y patch && rm -rf /var/lib/apt/lists/*
+RUN patch /root/miniconda3/lib/python3.6/site-packages/casm/vasp/io/incar.py /tmp/casm.io.vasp.incar.py.patch
+
 COPY entrypoint.sh /entrypoint.sh
 
 COPY --from=0 /VASP5_psps /VASP5_psps

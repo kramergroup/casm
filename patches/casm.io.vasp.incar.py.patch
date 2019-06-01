@@ -1,0 +1,14 @@
+--- /root/miniconda3/lib/python3.6/site-packages/casm/vasp/io/incar.py	2019-06-01 10:52:42.352502943 +0000
++++ /root/miniconda3/lib/python3.6/site-packages/casm/vasp/io/incar.new.py	2019-06-01 10:52:30.692502975 +0000
+@@ -197,9 +197,9 @@
+                 pass
+             else:
+                 if tag.lower() in VASP_TAG_SITEF_LIST + VASP_TAG_SPECF_LIST:
+-                    incar_write.write('{} = {}\n'.format(tag.upper(),remove_chars(self.tags[tag], "[\[\],]'")))
++                    incar_write.write('{} = {}\n'.format(tag.upper(),remove_chars(self.tags[tag], "[\[\],']")))
+                 elif tag.lower() in VASP_TAG_SPECI_LIST:
+-                    incar_write.write('{} = {}\n'.format(tag.upper(),remove_chars(self.tags[tag], "[\[\],]'")))
++                    incar_write.write('{} = {}\n'.format(tag.upper(),remove_chars(self.tags[tag], "[\[\],']")))
+                 elif tag.lower() in VASP_TAG_BOOL_LIST:
+                     if self.tags[tag] == True:
+                         incar_write.write('{} = .TRUE.\n'.format(tag.upper()))
